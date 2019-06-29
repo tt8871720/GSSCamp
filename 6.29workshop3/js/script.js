@@ -37,7 +37,7 @@ $(function(){
             },
             pageSize: 20,
         },
-        toolbar: kendo.template("<div class='book-grid-toolbar'><input class='book-grid-search' placeholder='我想要找......' type='text'></input></div>"),
+        toolbar: kendo.template("<div class='book-grid-toolbar'><input class='book-grid-search' placeholder='依書籍名稱尋找......' type='text'></input></div>"),
         height: 550,
         sortable: true,
         pageable: {
@@ -54,6 +54,18 @@ $(function(){
         ]
         
     });
+
+//search
+$(".book-grid-search").on("input propertychange" , function(){
+    $("#book_grid").data("kendoGrid").dataSource.filter({
+        filters:[{
+            field: "BookName",
+            operator: "contains",
+            value: $(".book-grid-search").val()
+        }]
+    })
+})
+    
 })
 
 function loadBookData(){
