@@ -68,4 +68,17 @@ function onChange(){
     $(".book-image").attr("src" , $("#book_category").data("kendoDropDownList").value())
 }
   
-function deleteBook(){}
+function deleteBook(e){
+    console.log(e);
+    var target = this.dataItem($(e.currentTarget).closest("tr"));
+   //查看目前目標 console.log(target);
+    for(var i = 0;i <= bookDataFromLocalStorage.length; i++){
+        if(bookDataFromLocalStorage[i].BookId == target.BookId){
+bookDataFromLocalStorage.splice(i,1);
+break;
+        }
+    }
+    //update
+    localStorage.setItem("bookData" , JSON.stringify(bookDataFromLocalStorage));
+    $("#book_grid").data("kendoGrid").dataSource.data(bookDataFromLocalStorage);
+}
