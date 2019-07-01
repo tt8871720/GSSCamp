@@ -71,13 +71,12 @@ $(function () {
 
     //create new window
     var add = $("#add");
-    var window = $("#addwindow");
+    var addwindow = $("#addwindow");
     add.click(function () {
-        window.data("kendoWindow").open();
+        addwindow.data("kendoWindow").open();
     })
-    window.kendoWindow({
-        width: "1200px",
-        weigth: "250px",
+    addwindow.kendoWindow({
+        width: "500px",
         height: "450px",
         title: "add a new book",
         visible: false,
