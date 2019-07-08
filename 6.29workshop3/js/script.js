@@ -18,9 +18,13 @@ $(function () {
         dataValueField: "value",
         dataSource: data,
         index: 0,
-        change: onChange
+        change: imgChange
     });
-    $("#bought_datepicker").kendoDatePicker();
+    $("#bought_datepicker").kendoDatePicker({
+        value : new Date(),
+        format: "yyyy-MM-dd"
+    })
+
     $("#book_grid").kendoGrid({
         dataSource: {
             data: bookDataFromLocalStorage,
@@ -73,20 +77,22 @@ $(function () {
     var add = $("#add");
     var addwindow = $("#addwindow");
     add.click(function () {
-        addwindow.data("kendoWindow").open();
+        addwindow.data("kendoWindow").center().open();//center加在這，代表每次開window時都會在中央
     })
     addwindow.kendoWindow({
         width: "500px",
-        height: "450px",
+        height: "650px",
         title: "add a new book",
         visible: false,
+        //只能操作當前視窗
+        modal: true,
         //釘選,最大化,最小化,關閉
         actions: [
             "Pin",
             "Minimize",
             "Maximize",
             "Close"]
-    }).data("kendoWindow").center();
+    }).data("kendoWindow");
     //add
     $("#sent").click(function () {
         addBook();
@@ -107,15 +113,16 @@ function loadBookData() {
     }
 }
 
-function onChange() {
+function imgChange() {
     $(".book-image").attr("src", $("#book_category").data("kendoDropDownList").value())
 }
 
 function deleteBook(e) {
+    e.preventDefault();
     console.log(e);
     var target = this.dataItem($(e.currentTarget).closest("tr"));
-    //查看目前目標 console.log(target);
-    for (var i = 0; i <= bookDataFromLocalStorage.length; i++) {
+    //查看目前事件 console.log(target);
+    for (var i = 0; i < bookDataFromLocalStorage.length; i++) {
         if (bookDataFromLocalStorage[i].BookId == target.BookId) {
             bookDataFromLocalStorage.splice(i, 1);
             break;
@@ -129,18 +136,19 @@ function deleteBook(e) {
 function addBook() {
     const newdata = {
 
-        "BookId": bookDataFromLocalStorage[bookDataFromLocalStorage.length - 1].BookId + 1,
+       "BookId": bookDataFromLocalStorage[bookDataFromLocalStorage.length - 1].BookId + 1,
+      //var maxid = Math.max.apply(null, objArray.map(BookId));
+    //    "BookId": bookdata.max +１,
         "BookCategory": $("#book_category").data("kendoDropDownList").text(),
         "BookName": $("#book_name").val(),
         "BookAuthor": $("#book_author").val(),
-        //"BookBoughDate": kendo.toString($("#bought_datepicker"), "yyyy-MM-dd"),
         "BookBoughtDate": kendo.toString($("#bought_datepicker").data("kendoDatePicker").value(), "yyyy-MM-dd"),
         "BookPublisher": $("#book_publisher").val()
     }
 
     //update
     bookDataFromLocalStorage.push(newdata);
-    console.log(newdata);
     localStorage.setItem("bookData", JSON.stringify(bookDataFromLocalStorage));
-    $("#book_grid").data("kendoGrid").dataSource.data(bookDataFromLocalStorage);
+    //只重新load新增的資料，不用全部的資料重複抓取
+    $("#book_grid").data("kendoGrid").dataSource.add(newdata);
 }

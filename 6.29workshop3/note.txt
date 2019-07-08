@@ -1,0 +1,9 @@
+delete確認提醒
+datetimepicker手動輸入作弊法、input限制
+validate功能
+onchange方法rename
+search搜尋方法
+bookid = 最大值+1，避免刪除最後一個又新增
+新增刪除只丟一筆 不用整包丟add、remove*(可以一次只更新一筆資料，在grid上)
+為了避免網頁上出現#字 button都要加上e.preventDefault(); or in html type= "button" 
+，否則button會自動有submmit的功能
